@@ -1,11 +1,13 @@
 from pymongo import MongoClient
 from bson import ObjectId
+import datetime
 
 class DatabaseManager:
     def __init__(self, connection_string="mongodb://localhost:27017/"):
         self.client = MongoClient(connection_string)
         self.db = self.client["user_management"]
         self.users_collection = self.db["users"]
+        self.users_history = self.db["users_history"]
 
 
     def add_user(self, username):
@@ -36,3 +38,55 @@ class DatabaseManager:
         object_id = ObjectId(user_id)
         user = self.users_collection.find_one({"_id": object_id})
         return user if user else None
+
+    def get_all_history(self):
+        history = self.users_history.find()
+        return [(str(item["_id"]), item["name"]) for item in history]
+
+    def add_summarization_history(self, user_id, text, summary, name):
+        history_id = self.users_history.insert_one({
+            "user_id": user_id,
+            "name": name,
+            "date": datetime.datetime.now(),
+            "text": text,
+            "summary": summary
+        })
+        return str(history_id.inserted_id)
+
+    def get_user_history(self, user_id):
+        history = self.users_history.find({"user_id": user_id})
+        result = [(str(item["_id"]), item["name"]) for item in history]
+        print(result)
+        return result
+
+    def get_document_by_id(self, document_id):
+        object_id = ObjectId(document_id)
+        document = self.users_history.find_one({"_id": object_id})
+        return document if document else None
+
+    def delete_document_by_id(self, document_id):
+        object_id = ObjectId(document_id)
+        self.users_history.delete_one({"_id": object_id})
+
+    def search_content(self, string, user_id):
+        result = self.users_history.find({
+            "$and": [
+                {"text": {"$regex": string, "$options": "i"}},  # Case-insensitive regex search
+                {"user_id": user_id}
+            ]
+        })
+        return [(str(item["_id"]), item["name"]) for item in result]
+    
+    def search_summary(self, string, user_id):
+        result = self.users_history.find({
+            "$and": [
+                {"summary": {"$regex": string, "$options": "i"}},  # Case-insensitive regex search
+                {"user_id": user_id}
+            ]
+        })
+        return [(str(item["_id"]), item["name"]) for item in result]
+    
+    def delete_user(self, user_id):
+        object_id = ObjectId(user_id)
+        self.users_collection.delete_one({"_id": object_id})
+        self.users_history.delete_many({"user_id": user_id})

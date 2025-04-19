@@ -35,6 +35,7 @@ def login_page(cookie_manager):
                     st.session_state.username = username
                     # pull user preferences from db
                     st.session_state.user_preferences = db.get_user_preferences(id) #list of dict
+                    st.session_state.user_history = db.get_user_history(str(id)) #list of tuple
 
                     st.session_state.page = "home"              
                 except Exception as e:
@@ -62,6 +63,7 @@ def signup_page(cookie_manager):
             st.session_state.id = str(id)
             st.session_state.username = username
             st.session_state.user_preferences = db.get_user_preferences(id)
+            st.session_state.user_history = None
             st.session_state.page = "home"
 
             #st.rerun()
@@ -89,6 +91,7 @@ def logout(cookie_manager):
         print(f"Error deleting cookies: {e}")
         st.error(f"Error deleting cookies: {e}")
     st.session_state.clear()
+    st.session_state.refresh = False
     st.session_state.page = "welcome"
     time.sleep(0.5)
     st.rerun()

@@ -1,6 +1,7 @@
 import streamlit as st
 from db_instance import db
 import time
+import json
 
 def first_preference_page(cookie_manager):
     cookie_manager.set("current_page", "first_preference", key="set_current_page")
@@ -34,7 +35,7 @@ def first_preference_page(cookie_manager):
         st.session_state.page = "home"
         st.rerun()
 
-def second_preference_page(selected_preference=None, name_values=None):
+def second_preference_page(cookie_manager, selected_preference=None, name_values=None):
     if selected_preference:
         st.markdown(f"### Edit Your Preference:")
     else:
@@ -74,10 +75,11 @@ def second_preference_page(selected_preference=None, name_values=None):
                 db.save_user_preference(st.session_state.id, st.session_state.user_preferences)
                 # Update session state
                 st.session_state.using_preference = preference
+                cookie_manager.set("using_preference", json.dumps(preference), key="set_using_preference")
                 st.session_state.page = "summarization"
                 st.success("Preference saved successfully!")
                 time.sleep(1)
-                st.rerun()
+                #st.rerun()
             else:
                 st.error("Please enter a preference name.")
     with col2:
@@ -88,11 +90,37 @@ def second_preference_page(selected_preference=None, name_values=None):
                     "temperature": temperature,
                     "max_tokens": max_tokens
                 }
-            st.session_state.using_preference = selected_preference
+            st.session_state.using_preference = preference
+            cookie_manager.set("using_preference", json.dumps(preference), key="set_using_preference")
             st.session_state.page = "summarization"
-            st.rerun()
+            #st.rerun()
     
     st.markdown("---")
     if st.button("Back", use_container_width=True, key="back_to_first_preference"):
         st.session_state.page = "first_preference"
+        st.rerun()
+
+def delete_preferences_page(cookie_manager):
+    cookie_manager.set("current_page", "delete_preferences", key="set_current_page")
+
+    st.markdown("### Delete Your Preference:")
+    if st.session_state.user_preferences:
+        name_values = [item["name"] for item in st.session_state.user_preferences if "name" in item]
+    else:
+        name_values = []
+    select = st.selectbox("Select an existing preference", name_values if name_values else ["No preferences available"], index=0)
+    if st.button("Delete", use_container_width=True, key="delete_preference_button"):
+        if select != "No preferences available":
+            target_preference = next((item for item in st.session_state.user_preferences if item["name"] == select), None)
+            st.session_state.user_preferences.remove(target_preference)
+            db.save_user_preference(st.session_state.id, st.session_state.user_preferences)
+            st.success("Preference deleted successfully!")
+            time.sleep(1)
+            st.rerun()
+        else:
+            st.warning("No preferences available. Please create a new preference.")
+
+    st.markdown("---")
+    if st.button("Back", use_container_width=True, key="back_to_home"):
+        st.session_state.page = "home"
         st.rerun()
