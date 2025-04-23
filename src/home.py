@@ -32,23 +32,26 @@ def home_page(cookie_manager):
 
         st.subheader("History 📖")
 
-        items_per_page = 5
-        total_pages = (len(st.session_state.user_history) + items_per_page - 1) // items_per_page
-
         if "history_page" not in st.session_state:
             st.session_state.history_page = 1
 
-        # Display history items for the current page
-        start_idx = (st.session_state.history_page - 1) * items_per_page
-        end_idx = start_idx + items_per_page
-        current_page_items = st.session_state.user_history[start_idx:end_idx]
+        items_per_page = 5
+        total_pages = 0
 
-        for i, item in enumerate(current_page_items):
-            if st.sidebar.button(item[1], key=f"user_history_{i}"):
-                cookie_manager.set("target_history", json.dumps(item), key="set_target_history")
-                st.session_state.target_history = item
-                st.session_state.page = "history_summary"
-                #st.rerun()
+        if st.session_state.user_history:
+            total_pages = (len(st.session_state.user_history) + items_per_page - 1) // items_per_page
+
+            # Display history items for the current page
+            start_idx = (st.session_state.history_page - 1) * items_per_page
+            end_idx = start_idx + items_per_page
+            current_page_items = st.session_state.user_history[start_idx:end_idx]
+
+            for i, item in enumerate(current_page_items):
+                if st.sidebar.button(item[1], key=f"user_history_{i}"):
+                    cookie_manager.set("target_history", json.dumps(item), key="set_target_history")
+                    st.session_state.target_history = item
+                    st.session_state.page = "history_summary"
+                    #st.rerun()
 
         # Pagination controls
         st.markdown("---")
