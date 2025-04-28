@@ -12,6 +12,7 @@ def summarize_text(text, preference):
     response = chat_api(model=model, max_tokens=max_tokens, prompt=text, temperature=temperature, style=style)
     return response[0] if response else "Error: No response from API"
 
+
 def summarization_page(cookie_manager):
     cookie_manager.set("current_page", "summarization", key="set_current_page")
 
@@ -54,6 +55,7 @@ def summarization_page(cookie_manager):
         st.session_state.using_preference = None
         st.session_state.page = "home"
         st.rerun()
+
 
 def history_summary_page(cookie_manager, document_tuple):
     cookie_manager.set("current_page", "history_summary", key="set_current_page")

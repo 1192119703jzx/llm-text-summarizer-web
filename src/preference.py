@@ -35,6 +35,7 @@ def first_preference_page(cookie_manager):
         st.session_state.page = "home"
         st.rerun()
 
+
 def second_preference_page(cookie_manager, selected_preference=None, name_values=None):
     if selected_preference:
         st.markdown(f"### Edit Your Preference:")
@@ -99,6 +100,7 @@ def second_preference_page(cookie_manager, selected_preference=None, name_values
     if st.button("Back", use_container_width=True, key="back_to_first_preference"):
         st.session_state.page = "first_preference"
         st.rerun()
+
 
 def delete_preferences_page(cookie_manager):
     cookie_manager.set("current_page", "delete_preferences", key="set_current_page")
