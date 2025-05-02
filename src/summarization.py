@@ -9,7 +9,7 @@ def summarize_text(text, preference):
     temperature = preference["temperature"]
     style = preference["style"]
     model = 'deepseek-chat'
-    response = chat_api(model=model, max_tokens=max_tokens, prompt=text, temperature=temperature, style=style)
+    response = chat_api(model=model, max_tokens=max_tokens, text=text, temperature=temperature, style=style)
     return response[0] if response else "Error: No response from API"
 
 
