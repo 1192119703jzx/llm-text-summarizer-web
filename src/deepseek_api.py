@@ -10,7 +10,7 @@ from prompt.technical_prompt import TECHINCAL_PROMPT
 
 load_dotenv()
 
-def first_call(model, max_tokens, text, temperature, style):
+def first_call(model, text, temperature, style):
     client = OpenAI(api_key=os.getenv('DEEPSEEK_API'), base_url="https://api.deepseek.com")
     if style == "Technical":
         prompt_format = TECHINCAL_PROMPT.format(prompt=text)
@@ -22,7 +22,6 @@ def first_call(model, max_tokens, text, temperature, style):
         raise ValueError("Invalid style. Choose from 'technical', 'casual', or 'formal'.")
     ans = client.chat.completions.create(
         model=model,
-        max_tokens=max_tokens,
         messages=[
             {'role': 'system', 'content': f'You are a helpful assistant who is an expert in text summarization. Your task is to summarize the text I provide in a {style} style, following the examples given.'},
             {'role': 'user', 'content': prompt_format.format(prompt=text)},],
@@ -42,14 +41,13 @@ def third_call(model, text, max_tokens, style, first_response, second_response):
     client = OpenAI(api_key=os.getenv('DEEPSEEK_API'), base_url="https://api.deepseek.com")
     ans = client.chat.completions.create(
         model=model,
-        max_tokens=max_tokens,
         messages=[
-            {'role': 'system', 'content': f'You are a helpful assistant who is an expert in text summarization. Your task is to refine the summary based on the critique, where the summary summarizes the article in a {style} style. You should address all issues in the critique and ensure that all suggestions from the critique are incorporated. Please only return the refined summary.'},
+            {'role': 'system', 'content': f'You are a helpful assistant who is an expert in text summarization. Your task is to refine the summary based on the critique, where the summary summarizes the article in a {style} style. You should address all issues in the critique and ensure that all suggestions from the critique are incorporated. Please only return the refined summary using no more than {max_tokens} words.'},
             {'role': 'user', 'content': f'<article>: {text}\n <summary>: {first_response}\n <critique>: {second_response}'},])
     return [choice.message.content for choice in ans.choices]
 
 def chat_api(model, max_tokens, text, temperature, style):
-    first_response = first_call(model, max_tokens, text, temperature, style)
+    first_response = first_call(model, text, temperature, style)
     #print("First response:", first_response[0])
     second_response = second_call(model, text, style, first_response[0])
     #print("Second response:", second_response[0])
