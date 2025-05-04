@@ -2,20 +2,25 @@ import streamlit as st
 import time
 from db_instance import db
 
+
 # Define callback functions
 def go_to_login():
     st.session_state.page = "login"
 
+
 def go_to_signup():
     st.session_state.page = "signup"
 
+
 def go_to_welcome():
     st.session_state.page = "welcome"
+
 
 def welcome_page():
     st.title("Welcome to our text summarizer!")
     st.button("Log in", on_click=go_to_login)
     st.button("Sign up", on_click=go_to_signup)
+
 
 def login_page(cookie_manager):
     st.title("Login")
@@ -48,6 +53,7 @@ def login_page(cookie_manager):
     st.button("I don't have an account", on_click=go_to_signup)
     st.button("Back", on_click=go_to_welcome)
 
+
 def signup_page(cookie_manager):
     st.title("Sign Up")
     username = st.text_input("Enter your username")
@@ -71,6 +77,7 @@ def signup_page(cookie_manager):
             st.error("Please enter a username.")
     st.button("Already have an account?", on_click=go_to_login)
     st.button("Back", on_click=go_to_welcome)
+
 
 def logout(cookie_manager):
     # Clear cookies

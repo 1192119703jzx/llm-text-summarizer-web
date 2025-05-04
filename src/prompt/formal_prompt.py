@@ -1,0 +1,16 @@
+FORMAL_PROMPT = '''
+<article>: London A 19-year-old man was charged Wednesday with terror offenses after he was arrested as he returned to Britain from Turkey, London's Metropolitan Police said. Yahya Rashid, a UK national from northwest London, was detained at Luton airport on Tuesday after he arrived on a flight from Istanbul, police said. He's been charged with engaging in conduct in preparation of acts of terrorism, and with engaging in conduct with the intention of assisting others to commit acts of terrorism. Both charges relate to the period between November 1 and March 31. Rashid is due to appear in Westminster Magistrates' Court on Wednesday, police said. CNN's Lindsay Isaac contributed to this report.
+<summary>: London's Metropolitan Police say the man was arrested at Luton airport after landing on a flight from Istanbul. He's been charged with terror offenses allegedly committed since the start of November.
+
+
+<article>: Tobacco companies including Philip Morris and R.J. Reynolds filed suit this week against the Food and Drug Administration alleging that the FDA is violating the companies' free speech rights. In March, the FDA issued guidance that if significant changes are made to a product's label, like color or a logo, the product requires new approval from the administration. This holds true even if the product was previously approved. The suit, filed in U.S. District Court in Washington, argues that those guidelines go too far and are too vague. They violate the First Amendment because they pre-emptively restrict free speech and exceed the scope of the Tobacco Control Act, the companies claim. The FDA's actions, the suit says, do not advance a substantial government interest. The plaintiffs also include U.S. Smokeless Tobacco Co., American Snuff Co., Santa Fe Natural Tobacco Co. and Lorillard Tobacco Co. FDA spokesman Michael Felberbaum said the administration does not comment on litigation. CNN's Debra Goldschmidt contributed to this report.
+<summary>: Companies including Philip Morris and R.J. Reynolds in suit alleging violation of free speech. In March, the FDA issued guidance about changes to tobacco product labels. If significant changes are made to a product's label, like color or a logo, the product requires new approval.
+
+
+<article>: Once Hillary Clinton's official announcement went online, social media responded in a big way, with terms like "Hillary Clinton," "#Hillary2016," and yes, even "#WhyImNotVotingforHillary" trending. Certainly, you couldn't go far on Twitter (even before Clinton tweeted her announcement), without an opinion or thought on her new campaign (there were over 3 million views of her announcment tweets in one hour, and 750,000 Facebook video views so far by Sunday evening). Some tweeted their immediate support, with one word:.
+<summary>: Response across social media led to multiple trending topics for Hillary Clinton's presidential announcement. Some responded to her video and her new campaign logo.
+
+
+<article>: {prompt}
+<summary>: 
+'''.strip() + '\n\n\n'

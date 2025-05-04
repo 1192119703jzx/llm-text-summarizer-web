@@ -1,14 +1,17 @@
 import streamlit as st
 from db_instance import db
 import time
+from deepseek_api import chat_api
 
 
-import uuid
+def summarize_text(text, preference):
+    max_tokens = preference["max_tokens"]
+    temperature = preference["temperature"]
+    style = preference["style"]
+    model = 'deepseek-chat'
+    response = chat_api(model=model, max_tokens=max_tokens, text=text, temperature=temperature, style=style)
+    return response[0] if response else "Error: No response from API"
 
-def summarize_text(text,preference):
-    # Actual summarization logic implement here
-    short_string = str(uuid.uuid4())[:5]
-    return f"{short_string} This is a test summary of the provided text."
 
 def summarization_page(cookie_manager):
     cookie_manager.set("current_page", "summarization", key="set_current_page")
@@ -52,6 +55,7 @@ def summarization_page(cookie_manager):
         st.session_state.using_preference = None
         st.session_state.page = "home"
         st.rerun()
+
 
 def history_summary_page(cookie_manager, document_tuple):
     cookie_manager.set("current_page", "history_summary", key="set_current_page")
