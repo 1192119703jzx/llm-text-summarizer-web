@@ -1,11 +1,29 @@
 from pymongo import MongoClient
 from bson import ObjectId
+from typing import Literal
 import datetime
+import os
+from dotenv import load_dotenv
+
+
+load_dotenv()
+
 
 class DatabaseManager:
-    def __init__(self, connection_string="mongodb://localhost:27017/"):
+    def __init__(
+        self,
+        connection_string=os.getenv('DB_URI'),
+        location: Literal['remote', 'local'] = 'remote'): 
+        
+        if location == 'local':
+            connection_string="mongodb://localhost:27017/"
+    
         self.client = MongoClient(connection_string)
-        self.db = self.client["user_management"]
+
+        try:
+            self.db = self.client.get_database('llm-summarizer')
+        except Exception as e:
+            raise Exception('Unable to find the database due to ', e)
         self.users_collection = self.db["users"]
         self.users_history = self.db["users_history"]
 
