@@ -12,11 +12,12 @@ load_dotenv()
 class DatabaseManager:
     def __init__(
         self,
-        connection_string=os.getenv('DB_URI'),
         location: Literal['remote', 'local'] = 'remote'): 
         
         if location == 'local':
             connection_string="mongodb://localhost:27017/"
+        else:
+            connection_string = os.getenv('DB_URI')
     
         self.client = MongoClient(connection_string)
 
@@ -26,7 +27,6 @@ class DatabaseManager:
             raise Exception('Unable to find the database due to ', e)
         self.users_collection = self.db["users"]
         self.users_history = self.db["users_history"]
-
 
     def add_user(self, username):
         result = self.users_collection.insert_one({
