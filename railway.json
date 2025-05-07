@@ -1,0 +1,9 @@
+{
+    "$schema": "https://railway.com/railway.schema.json",
+    "build": {
+        "builder": "NIXPACKS"
+    },
+    "deploy": {
+        "startCommand": "streamlit run src/main.py --server.port=8501 --server.address=0.0.0.0" 
+    }
+}

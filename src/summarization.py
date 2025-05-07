@@ -31,9 +31,9 @@ def summarization_page(cookie_manager):
         else:
             text_input = uploaded_file.read().decode("utf-8")
     
-    # summit button
-    if st.button("Summit", use_container_width=True):
-        st.success("Summit successfully, working on it...")
+    # submit button
+    if st.button("Submit", use_container_width=True):
+        st.success("Submit successfully, working on it...")
         if text_input:
             summary = summarize_text(text_input, st.session_state.using_preference)  # Placeholder for actual summarization function
             st.markdown("### Summary:")
